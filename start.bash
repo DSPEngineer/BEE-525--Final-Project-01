@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/bash
 
 source env/bin/activate
 
