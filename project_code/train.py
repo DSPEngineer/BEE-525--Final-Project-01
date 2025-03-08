@@ -51,6 +51,8 @@ train_data = train_data.reshape(-1,28,28,1)
 test_data  = test_data.reshape(-1,28,28,1)
 
 plt.imshow(test_data[1], cmap="gray");
+plt.axis('off')  # Turn off axis labels and ticks
+plt.show()
 
 # Loading an instance of the model using create_model()
 model = create_model()
@@ -63,6 +65,5 @@ model.evaluate( test_data, test_labels)
 predictions = model.predict(test_data)
 np.set_printoptions(suppress=True)
 print(f"Label: ${test_labels[1]}")
-#plt.imshow(test_data[1], cmap="gray");
 print(predictions[1])
 
