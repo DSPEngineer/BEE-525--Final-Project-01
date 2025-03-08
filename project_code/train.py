@@ -1,11 +1,10 @@
 #! /usr/bin/python
 
 import tensorflow as tf
-#from CNN_model.model import create_model
 
 import os
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 
 ########################################################################
@@ -37,6 +36,7 @@ path_to_dir = f'{home_dir}/Desktop/Labs/Final_Project/weights'
 file_name = '/best_weights.weights.h5'
 
 latest_weight_path=path_to_dir+file_name 
+print(f"File: ${latest_weight_path}")
 
 mnist = tf.keras.datasets.mnist
 (train_data, train_labels), (test_data, test_labels) = mnist.load_data()
@@ -50,6 +50,8 @@ test_data = test_data.astype('float32') / 255.0
 train_data = train_data.reshape(-1,28,28,1)
 test_data  = test_data.reshape(-1,28,28,1)
 
+plt.imshow(test_data[1], cmap="gray");
+
 # Loading an instance of the model using create_model()
 model = create_model()
 
@@ -61,4 +63,6 @@ model.evaluate( test_data, test_labels)
 predictions = model.predict(test_data)
 np.set_printoptions(suppress=True)
 print(f"Label: ${test_labels[1]}")
+#plt.imshow(test_data[1], cmap="gray");
 print(predictions[1])
+
