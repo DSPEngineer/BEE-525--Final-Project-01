@@ -11,6 +11,21 @@ imageId = 2
 ########################################################################
 ## Function to create the CNN model
 ########################################################################
+def getMaxIndex(list):
+    maxIndex = -1;
+    maxVal = 0
+
+    for  i  in range( len(list) ) :
+        if list[i] > maxVal:
+            maxVal = list[i]
+            maxIndex = i
+            
+    return maxIndex
+
+
+########################################################################
+## Function to create the CNN model
+########################################################################
 def create_model():
 	model = tf.keras.models.Sequential([
 		tf.keras.Input(shape=(28,28,1)),
@@ -60,12 +75,24 @@ plt.show()
 model = create_model()
 
 # train the model using fit() function in keras 
-model.fit( train_data, train_labels, epochs=5 )
+model.fit( train_data, train_labels, epochs=1 )
 
 model.evaluate( test_data, test_labels)
 
 predictions = model.predict(test_data)
 np.set_printoptions(suppress=True)
-print(f"Label: ${test_labels[imageId]}")
+
+print(f"Label: [{test_labels[imageId]}]")
 print(predictions[imageId])
+
+imageList = predictions[imageId]
+print(f"ImageList: {imageList}")
+
+maxVal = max( imageList )
+print(f"Max Value: {maxVal}")
+
+#imageList = imageList.tolist()
+prediction = imageList.tolist().index( maxVal )
+print(f"Prediction: [{prediction}]")
+
 
