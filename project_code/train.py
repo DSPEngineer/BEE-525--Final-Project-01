@@ -6,6 +6,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
+imageId = 2
 
 ########################################################################
 ## Function to create the CNN model
@@ -19,11 +20,12 @@ def create_model():
 		tf.keras.layers.MaxPooling2D((2,2)),
 		tf.keras.layers.Flatten(),
 		tf.keras.layers.Dense(10,activation='softmax')
-	])
-	
-	model.compile(optimizer='adam', \
-		loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits =False),
-		metrics = [tf.keras.metrics.SparseCategoricalAccuracy()])
+              ])
+
+	model.compile( optimizer='adam', \
+                       loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits =False),
+		       metrics = [tf.keras.metrics.SparseCategoricalAccuracy()]
+                     )
 
 	return model
 
@@ -50,8 +52,8 @@ test_data = test_data.astype('float32') / 255.0
 train_data = train_data.reshape(-1,28,28,1)
 test_data  = test_data.reshape(-1,28,28,1)
 
-plt.imshow(test_data[1], cmap="gray");
-plt.axis('off')  # Turn off axis labels and ticks
+plt.imshow(test_data[imageId], cmap="gray");
+plt.axis('on')  # Turn off axis labels and ticks
 plt.show()
 
 # Loading an instance of the model using create_model()
@@ -64,6 +66,6 @@ model.evaluate( test_data, test_labels)
 
 predictions = model.predict(test_data)
 np.set_printoptions(suppress=True)
-print(f"Label: ${test_labels[1]}")
-print(predictions[1])
+print(f"Label: ${test_labels[imageId]}")
+print(predictions[imageId])
 
