@@ -6,7 +6,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-imageId = 2
+imageId = 5
 
 ########################################################################
 ## Function to find max index from list (obsolete)
@@ -48,8 +48,9 @@ def create_model():
 ########################################################################
 ########################################################################
 # Path to save the weights of the model
-weights_dir = ".weights.h5"
-weights_path = os.path.join( os.environ['PWD'], weights_dir )
+weights_file = ".weights.h5"
+weights_dir = "cp_weights"
+weights_path = os.path.join( os.environ['PWD'], weights_dir, weights_file )
 print(f"File: ${weights_path}")
 
 #os.mkdir( weights_path )
@@ -72,17 +73,26 @@ test_data = test_data.astype('float32') / 255.0
 train_data = train_data.reshape(-1,28,28,1)
 test_data  = test_data.reshape(-1,28,28,1)
 
+
 plt.imshow(test_data[imageId], cmap="gray");
 plt.axis('on')  # Turn off axis labels and ticks
 plt.show()
 
 # Loading an instance of the model using create_model()
+print("Create model")
 model = create_model()
 
 # train the model using fit() function in keras 
-model.fit( train_data, train_labels, epochs=1, callbacks=[cp_callback] )
+#model.fit( train_data, train_labels, epochs=5, callbacks=[cp_callback] )
 
-model.evaluate( test_data, test_labels)
+# Loads the weights
+print("Load model")
+model.load_weights(weights_path)
+
+# Re-evaluate the model
+print("Evaluate model")
+loss, acc = model.evaluate( test_data, test_labels, verbose=2)
+print("Restored model, accuracy: {:5.2f}%".format(100 * acc))
 
 predictions = model.predict(test_data)
 np.set_printoptions(suppress=True)
