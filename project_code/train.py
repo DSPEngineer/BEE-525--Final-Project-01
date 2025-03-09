@@ -6,8 +6,8 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-imageId = 2
-
+imageId = 3
+noEpoch = 15
 ########################################################################
 ## Function to find max index from list (obsolete)
 ########################################################################
@@ -38,8 +38,8 @@ def create_model():
               ])
 
 	model.compile( optimizer='adam', \
-                       loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits =False),
-		       metrics = [tf.keras.metrics.SparseCategoricalAccuracy()]
+                   loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = False),
+		           metrics = [tf.keras.metrics.SparseCategoricalAccuracy()]
                      )
 
 	return model
@@ -48,8 +48,9 @@ def create_model():
 ########################################################################
 ########################################################################
 # Path to save the weights of the model
-weights_dir = ".weights.h5"
-weights_path = os.path.join( os.environ['PWD'], weights_dir )
+weights_file = ".weights.h5"
+weights_dir = "cp_weights"
+weights_path = os.path.join( os.environ['PWD'], weights_dir, weights_file )
 print(f"File: ${weights_path}")
 
 #os.mkdir( weights_path )
@@ -58,7 +59,7 @@ print(f"File: ${weights_path}")
 # Checkpoint callback to saves the model's weights after each epoch
 cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=weights_path,
                                                  save_weights_only=True,
-                                                 verbose=1)
+                                                 verbose=2)
 
 mnist = tf.keras.datasets.mnist
 (train_data, train_labels), (test_data, test_labels) = mnist.load_data()
@@ -80,10 +81,12 @@ plt.show()
 model = create_model()
 
 # train the model using fit() function in keras 
-model.fit( train_data, train_labels, epochs=1, callbacks=[cp_callback] )
+model.fit( train_data, train_labels, epochs=noEpoch, callbacks=[cp_callback] )
 
 model.evaluate( test_data, test_labels)
-
+#model.save_weights(weights_path)
+model.save('myModel.keras')
+    
 predictions = model.predict(test_data)
 np.set_printoptions(suppress=True)
 

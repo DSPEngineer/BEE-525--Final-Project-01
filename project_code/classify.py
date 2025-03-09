@@ -6,7 +6,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-imageId = 5
+imageId = 7
 
 ########################################################################
 ## Function to find max index from list (obsolete)
@@ -38,9 +38,9 @@ def create_model():
               ])
 
 	model.compile( optimizer='adam', \
-                       loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits =False),
-		       metrics = [tf.keras.metrics.SparseCategoricalAccuracy()]
-                     )
+                   loss = tf.keras.losses.SparseCategoricalCrossentropy(from_logits = False),
+		           metrics = [tf.keras.metrics.SparseCategoricalAccuracy()]
+                 )
 
 	return model
 
@@ -57,9 +57,9 @@ print(f"File: ${weights_path}")
 #print( f"Directoy {weights_path} created." )
 
 # Checkpoint callback to saves the model's weights after each epoch
-cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=weights_path,
-                                                 save_weights_only=True,
-                                                 verbose=1)
+#cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=weights_path,
+#                                                 save_weights_only=True,
+#                                                 verbose=1)
 
 mnist = tf.keras.datasets.mnist
 (train_data, train_labels), (test_data, test_labels) = mnist.load_data()
@@ -76,25 +76,19 @@ test_data  = test_data.reshape(-1,28,28,1)
 
 plt.imshow(test_data[imageId], cmap="gray");
 plt.axis('on')  # Turn off axis labels and ticks
-plt.show()
+plt.pause( 3 )
+plt.show(  block=False )
 
 # Loading an instance of the model using create_model()
-print("Create model")
-model = create_model()
-
-# train the model using fit() function in keras 
-#model.fit( train_data, train_labels, epochs=5, callbacks=[cp_callback] )
-
-# Loads the weights
 print("Load model")
-model.load_weights(weights_path)
+new_model = tf.keras.models.load_model( 'myModel.keras' )
 
 # Re-evaluate the model
 print("Evaluate model")
-loss, acc = model.evaluate( test_data, test_labels, verbose=2)
+loss, acc = new_model.evaluate( test_data, test_labels, verbose=1)
 print("Restored model, accuracy: {:5.2f}%".format(100 * acc))
 
-predictions = model.predict(test_data)
+predictions = new_model.predict(test_data)
 np.set_printoptions(suppress=True)
 
 print(f"Label: [{test_labels[imageId]}]")
