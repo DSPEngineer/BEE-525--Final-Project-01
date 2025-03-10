@@ -5,9 +5,10 @@ import tensorflow as tf
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-#import cv2
+import cv2 as cv
 
-imageId = 9
+imageId = 8  ## Looks like 6
+imageId = 0  ## Looks like 7
 
 
 ########################################################################
@@ -53,12 +54,6 @@ def create_model_NN():
 
 ########################################################################
 ########################################################################
-# Path to save the weights of the model
-weights_file = ".weights.h5"
-weights_dir = "cp_weights"
-weights_path = os.path.join( os.environ['PWD'], weights_dir, weights_file )
-print(f"File: ${weights_path}")
-
 ##  Read the MNIST data
 mnist = tf.keras.datasets.mnist
 (train_data, train_labels), (test_data, test_labels) = mnist.load_data()
@@ -72,7 +67,7 @@ test_data = test_data.astype('float32') / 255.0
 train_data = train_data.reshape(-1,28,28,1)
 test_data  = test_data.reshape(-1,28,28,1)
 
-plt.imshow( test_data[0] )
+#plt.imshow( test_data[imageId] )
 #plt.axis('on')  # Turn off axis labels and ticks
 #plt.pause(5)
 #plt.show()
@@ -87,33 +82,46 @@ new_model = tf.keras.models.load_model( 'myModel.keras' )
 # Re-evaluate the model
 print("Evaluate model")
 loss, acc = new_model.evaluate( test_data, test_labels, verbose=1)
-print("Restored model, accuracy: {:5.2f}%".format(100 * acc))
+print( "Restored Model evaluation:" )
+print( "        loss: {:5.3f}%".format(100 * loss))
+print( "    accuracy: {:5.3f}%".format(100 * acc))
 
 
 #################################################################################
 file = r"myTestImages/Image_9.png"
-test_image = cv2.imread(file, 1)
+test_image = cv.imread(file)[:,:,0]
 print( test_image.shape )
 
 plt.imshow( test_image )
 plt.axis('on')  # Turn off axis labels and ticks
 plt.show()
 
-img_resized = cv2.resize( test_image, (28,28) )
-print( img_resized.shape )
+img_resized = cv.resize( test_image, (28,28) )
+#print( img_resized.shape )
+#print( img_resized )
+
+plt.imshow( img_resized )
+plt.axis('on')  # Turn off axis labels and ticks
+plt.show()
 
 img_resized = img_resized / 255.0
 print( img_resized.shape )
-#print( img_resized )
+print( img_resized )
 
-img_reshaped = img_resized.reshape(-1,28,28,1)
-print( img_reshaped.shape )
+plt.imshow( img_resized )
+plt.axis('on')  # Turn off axis labels and ticks
+plt.show()
 
+exit(0)
+
+img_reshaped = img_resized.reshape(28,28,1)
 predictions = new_model.predict( img_reshaped )
-#np.set_printoptions(suppress=True)
-
-print(f"Label: [{imageId}]")
 print(predictions)
+
+##np.set_printoptions(suppress=True)
+print(predictions)
+
+#print(f"Label: [{imageId}]")
 
 
 maxVal = max( predictions )
