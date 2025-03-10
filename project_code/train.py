@@ -11,7 +11,7 @@ import tensorflow as tf
 
 ########################################################################
 ## constants and definitions
-noEpoch = 15
+noEpoch = 5
 
 ## Path to save the weights of the model
 weights_file = f"{noEpoch}.weights.h5"
@@ -73,7 +73,7 @@ def create_model_NN():
     model.add( tf.keras.layers.Dense( 10, activation='softmax' ) )
 
     model.compile( optimizer='adam',
-                   loss = "sparse_categorical_crossentropy",
+                   loss = 'sparse_categorical_crossentropy',
                    metrics = ['accuracy']
                  )
 
@@ -89,7 +89,13 @@ def create_model_NN():
 ## Loading MNIST data
 mnist = tf.keras.datasets.mnist
 (train_data, train_labels), (test_data, test_labels) = mnist.load_data()
-train_data, test_data = train_data / 255, test_data / 255
+
+train_data = tf.keras.utils.normalize( train_data, axis=1)
+test_data  = tf.keras.utils.normalize( test_data, axis=1)
+
+
+'''
+#train_data, test_data = train_data / 255.0, test_data / 255.0
 
 # Preprocess the data to float type 
 train_data = train_data.astype('float32') / 255.0
@@ -98,13 +104,13 @@ test_data = test_data.astype('float32') / 255.0
 # reshape the input data to fit the Model input size
 train_data = train_data.reshape(-1,28,28,1)
 test_data  = test_data.reshape(-1,28,28,1)
-
+'''
 
 ########################################################################
 ## Loading an instance of the model using create_model()
-modelName = f"myModel-E{noEpoch}.keras"
+modelName = f"myModel-NN-E{noEpoch}.keras"
 
-#Creat the modelName
+#Create the model
 model = create_model_NN()
 
 ########################################################################
@@ -123,7 +129,6 @@ model.evaluate( test_data, test_labels)
 model.save( modelName )
 
 # Evaluate the model using the  test data
-print("Evaluate model")
 loss, acc = model.evaluate( test_data, test_labels, verbose=1)
 print( "Model evaluation:" )
 print( "        loss: {:5.3f}%".format(100 * loss))
