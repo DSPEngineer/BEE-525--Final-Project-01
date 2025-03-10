@@ -78,6 +78,7 @@ test_data  = test_data.reshape(-1,28,28,1)
 # Loading an instance of the model using create_model()
 print("Load model")
 new_model = tf.keras.models.load_model( 'myModel.keras' )
+new_model.summary()
 
 # Re-evaluate the model
 print("Evaluate model")
@@ -92,30 +93,42 @@ file = r"myTestImages/Image_9.png"
 test_image = cv.imread(file)[:,:,0]
 print( test_image.shape )
 
-plt.imshow( test_image )
-plt.axis('on')  # Turn off axis labels and ticks
-plt.show()
+# plt.imshow( test_image )
+# plt.axis('on')  # Turn off axis labels and ticks
+# plt.show()
 
 img_resized = cv.resize( test_image, (28,28) )
 #print( img_resized.shape )
 #print( img_resized )
 
-plt.imshow( img_resized )
-plt.axis('on')  # Turn off axis labels and ticks
-plt.show()
+# plt.imshow( img_resized )
+# plt.axis('on')  # Turn off axis labels and ticks
+# plt.show()
 
-img_resized = img_resized / 255.0
-print( img_resized.shape )
-print( img_resized )
+#img_resized = img_resized / 255.0
+#print( img_resized.shape )
+#print( img_resized )
 
-plt.imshow( img_resized )
-plt.axis('on')  # Turn off axis labels and ticks
-plt.show()
+# plt.imshow( img_resized )
+# plt.axis('on')  # Turn off axis labels and ticks
+# plt.show()
 
-exit(0)
+#exit(0)
 
-img_reshaped = img_resized.reshape(28,28,1)
-predictions = new_model.predict( img_reshaped )
+# img_reshaped = img_resized.reshape(28,28,1)
+# plt.imshow( img_reshaped )
+# plt.axis('on')  # Turn off axis labels and ticks
+# plt.show()
+
+# img_reshaped = img_resized.flatten( )
+# plt.imshow( img_reshaped )
+# plt.axis('on')  # Turn off axis labels and ticks
+# plt.show()
+
+
+img = np.array(img_resized)
+
+predictions = new_model.predict( img )
 print(predictions)
 
 ##np.set_printoptions(suppress=True)
