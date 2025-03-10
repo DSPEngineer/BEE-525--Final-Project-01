@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
 import tensorflow as tf
-from tensorflow import keras
+#from tensorflow import keras
 
 import os
 import numpy as np
@@ -70,6 +70,18 @@ test_data = test_data.astype('float32') / 255.0
 # reshape the input data to fit the Model input size
 train_data = train_data.reshape(-1,28,28,1)
 test_data  = test_data.reshape(-1,28,28,1)
+#print( test_data[0] )
+
+######### Train a fresh model
+noEpoch=1
+model = create_model()
+
+# train the model using fit() function in keras 
+#model.fit( train_data, train_labels, epochs=noEpoch, callbacks=[cp_callback] )
+model.fit( train_data, train_labels, epochs=noEpoch )
+
+### model.save('myModel.keras')
+########## End of training
 
 
 ## Loading a saved instance of the model using load_model()
@@ -77,38 +89,53 @@ print("Load model")
 new_model = tf.keras.models.load_model( 'myModel.keras' )
 # Show the model architecture
 new_model.summary()
+# Loading an instance of the model using create_model()
 
 # Re-evaluate the model using the test data from MNIST
 print("Evaluate model")
-loss, acc = new_model.evaluate( test_data, test_labels, verbose=2)
+loss, acc = new_model.evaluate( test_data, test_labels, verbose=1)
 #loss, acc = new_model.evaluate( train_data, train_labels, verbose=1)
 print("** Restored model, accuracy: {:5.2f}%".format(100 * acc))
 print( f"-- train_data shape: {train_data[0].shape}" )
 print( "--------------------------------------------------------------------" )
 
+#################################
+# Both models are ready: Compare with test data:
+testImgIdx = 2
+print( f"Label: {test_labels[testImgIdx]}" )
+predict = new_model.predict( test_data )
+print( f"    New Model: {predict[testImgIdx].shape} : {predict[testImgIdx]}" )
+predict = model.predict( test_data )
+print( f"    Old Model: {predict[testImgIdx].shape} : {predict[testImgIdx]}" )
+#################################
 
 print( os.listdir( 'myTestImages' ) )
 tf_dim=28
 tf_size=(tf_dim, tf_dim)
 
 def get_image( fileName ) :
-    img_array = cv.imread( fileName, cv.IMREAD_UNCHANGED )[:,:,0]     #Read the image as a grayscale
-    print( f"-- Shape of raw image: {img_array.shape}" )
-    resize_image = cv.resize(img_array, tf_size)
-    print( f"-- Shape of resized image: {resize_image.shape}" )
-
-    #,  interpolation=cv.INTER_AREA  )  #Resize the data to the MNIST dimensions
-    resize_image = resize_image.astype(float) / 255.0
-    resize_image_tensor = tf.expand_dims( resize_image, axis=0)
-    print( f"-- Shape of tensor image: {resize_image_tensor.shape}" )
+    img = Image.open( fileName ).convert('L')
+    img_array = cv.imread( fileName )
+    new_array = cv.cvtColor(img_array, cv.COLOR_BGR2GRAY)
+    new_array = cv.resize(new_array, tf_size, cv.INTER_CUBIC )
+#    print(new_array.shape)
+#    print(new_array)
+    plt.imshow(new_array, cmap='gray')
+    #plt.waitforbuttonpress()
+    #plt.close('all')
+    plt.show()
+    new_array = new_array.astype(float) / 255.0
+    resize_image_tensor = new_array.reshape(-1,28,28,1)
+#    print( resize_image_tensor )
+    #resize_image_tensor = tf.expand_dims( new_array, axis=0)
     return resize_image_tensor
-    
+
 
 imageDir = "myTestImages"
 for img in os.listdir( imageDir ) :
     myImage = get_image(  f"{imageDir}/{img}" )
-    print( myImage.shape)
-#    print( myImage)
 
-    predictions = new_model.predict( myImage )
-    print( predictions )
+    predict = new_model.predict( myImage )
+    print( f"New Model: {predict[0].shape} : {predict[0]}" )
+    predict = model.predict( myImage )
+    print( f"Old Model: {predict[0].shape} : {predict[0]}" )

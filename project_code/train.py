@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 imageId = 3
-noEpoch = 15
+noEpoch = 100
 ########################################################################
 ## Function to find max index from list (obsolete)
 ########################################################################
@@ -83,9 +83,10 @@ model = create_model()
 # train the model using fit() function in keras 
 model.fit( train_data, train_labels, epochs=noEpoch, callbacks=[cp_callback] )
 
+model.save('myModel.keras')
+
 model.evaluate( test_data, test_labels)
 #model.save_weights(weights_path)
-model.save('myModel.keras')
     
 predictions = model.predict(test_data)
 np.set_printoptions(suppress=True)
