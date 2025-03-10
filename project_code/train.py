@@ -11,7 +11,7 @@ import tensorflow as tf
 
 ########################################################################
 ## constants and definitions
-noEpoch = 5
+noEpoch = 1
 
 ## Path to save the weights of the model
 weights_file = f"{noEpoch}.weights.h5"
@@ -90,9 +90,14 @@ def create_model_NN():
 mnist = tf.keras.datasets.mnist
 (train_data, train_labels), (test_data, test_labels) = mnist.load_data()
 
+print( f" Train Data: {train_data.size}" )
+print( f"Train Label: {train_labels.size}" )
+
 train_data = tf.keras.utils.normalize( train_data, axis=1)
 test_data  = tf.keras.utils.normalize( test_data, axis=1)
 
+print( f" Train Data: {train_data.size}" )
+print( f"Train Label: {train_labels.size}" )
 
 '''
 #train_data, test_data = train_data / 255.0, test_data / 255.0
@@ -122,8 +127,6 @@ cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=weights_path,
 # train the model using fit() function in keras
 ##model.fit( train_data, train_labels, epochs=noEpoch, callbacks=[cp_callback] )
 model.fit( train_data, train_labels, epochs=noEpoch )
-
-model.evaluate( test_data, test_labels)
 
 # Save the model
 model.save( modelName )

@@ -10,6 +10,76 @@ import cv2 as cv
 imageId = 8  ## Looks like 6
 imageId = 0  ## Looks like 7
 
+mnist = tf.keras.datasets.mnist
+(train_data, train_labels), (test_data, test_labels) = mnist.load_data()
+
+train_data = tf.keras.utils.normalize( train_data, axis=1 )
+test_data =  tf.keras.utils.normalize(  test_data, axis=1 )
+
+model = tf.keras.models.Sequential()
+model.add( tf.keras.layers.Flatten( input_shape=(28,28) ) )
+model.add( tf.keras.layers.Dense( 128, activation='relu' ) )
+model.add( tf.keras.layers.Dense( 128, activation='relu' ) )
+model.add( tf.keras.layers.Dense( 10, activation='softmax' ) )
+
+model.compile( optimizer='adam',
+                loss = "sparse_categorical_crossentropy",
+                metrics = ['accuracy']
+                )
+
+print( f" Train Data: {train_data.shape}" )
+print( f"Train Label: {train_labels.shape}" )
+
+model.fit( train_data, train_labels, epochs=1 )
+
+# Evaluate the model using the  test data
+loss, acc = model.evaluate( test_data, test_labels, verbose=1)
+print( "Model evaluation:" )
+print( "        loss: {:5.3f}%".format(100 * loss))
+print( "    accuracy: {:5.3f}%".format(100 * acc))
+
+file = r"myTestImages/Image_9.png"
+test_image = cv.imread(file)[:,:,0]
+print( test_image.shape )
+plt.imshow( test_image,cmap='gray' )
+plt.show()
+
+reshaped_image = cv.resize( test_image, (28,28) )
+print( reshaped_image.shape )
+plt.imshow( reshaped_image,cmap='gray' )
+plt.show()
+
+img = np.array( reshaped_image )
+#img = np.invert( np.array( reshaped_image ) )
+print( img )
+print( img.shape )
+plt.imshow( img, cmap='gray' )
+plt.show()
+
+img = img.astype(float)/255.0
+# Expanding the dimensions using expand_dims() method in tf library
+test_image_tensor = tf.expand_dims( img, axis=0)
+
+# Generating the inference using the predict() method
+predictions = model.predict(test_image_tensor)
+# Prediction outcome
+print(predictions)
+print( f"Predicted: {np.argmax(predictions)}")
+
+
+
+exit(0)
+
+predictions = model.predict( train_data )
+print( f"Label: {train_labels[0]}" )
+print(predictions[0])
+
+#img = tf.keras.utils.normalize( img, axis=1 )
+predictions = model.predict( [img] )
+#print( f"Label: {train_labels[0]}" )
+print(predictions[0])
+
+
 
 ########################################################################
 ## Function to create the Convolutional Neural Network model
