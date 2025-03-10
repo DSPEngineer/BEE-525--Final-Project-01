@@ -73,7 +73,7 @@ test_data = test_data.astype('float32') / 255.0
 train_data = train_data.reshape(-1,28,28,1)
 test_data  = test_data.reshape(-1,28,28,1)
 
-plt.imshow(test_data[imageId], cmap="gray");
+plt.imshow(test_data[imageId], cmap="gray")
 plt.axis('on')  # Turn off axis labels and ticks
 plt.show()
 
