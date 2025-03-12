@@ -18,10 +18,10 @@ nEpochs=5
 # Path to save the weights of the model
 home_dir = os.environ['PWD']
 path_to_dir = f'{home_dir}'
-file_name = 'EPOCH_{nEpochs:02}.weights.h5'
+file_name = f"EPOCH_{nEpochs:02}.weights.h5"
 
-latest_weight_path=f"{path_to_dir}/{file_name}" 
-								# is the location best weights are saved
+latest_weight_path=f"{path_to_dir}/{file_name}"			# the location where weights are saved
+print( f"Weights file: {latest_weight_path}" )	
 
 # load the MNIST dataset
 (x_train,y_train), (x_test,y_test) = tf.keras.datasets.mnist.load_data()
@@ -38,7 +38,7 @@ x_test  = x_test.reshape(-1,28,28,1)
 model = create_model()
 
 # train the model using fit() function in keras 
-model.fit(x_train,y_train,epochs=20)
+model.fit(x_train,y_train,epochs=nEpochs)
 
 # Save the model weights after training using save_weights
 model.save_weights(latest_weight_path)

@@ -1,21 +1,23 @@
+#! /usr/bin/python
 ######################################################################
-## Please use the following code to capture an image using the Rpi  ## 
-## camera connected using the camera interface. 					##
-## Created by Madhava Vemuri 										##
-## Date 3/3/25														##
-## Please use the following circuit diagram in page 5 to make the 	##
+## Please use the following code to capture an image using the Rpi  ##
+## camera connected using the camera interface. 		    ##
+## Created by Madhava Vemuri 					    ##
+## Date 3/3/25							    ##
+## Please use the following circuit diagram in page 5 to make the   ##
 ## connections. Double check the connections before you turn on Pi  ##
 ######################################################################
-
+#
 # Please make sure the picamzero library is intalled before you import 
-# the library
-
+# the library.
+#
 # to install the library use the following script in the command line 
 # before running this code 
 # sudo apt-get install python3-picamzero
  
 
 
+#from picamera2 import Camera # import the library to handle the camera
 from picamzero import Camera # import the library to handle the camera
 import os 
 from time import sleep 		 # import the sleep function 

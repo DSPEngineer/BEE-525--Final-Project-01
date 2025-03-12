@@ -22,8 +22,8 @@ file_name = 'current.weights.h5'
 
 print("Welcome BEE 525 Project 1")
 
-latest_weight_path=f"{path_to_dir}/{file_name}" 
-print( f"Weights file: {latest_weight_path}" )								# is the location best weights are saved
+latest_weight_path=f"{path_to_dir}/{file_name}"			# the location where weights are saved
+print( f"Weights file: {latest_weight_path}" )
 
 # load the MNIST dataset
 (x_train,y_train), (x_test,y_test) = tf.keras.datasets.mnist.load_data()

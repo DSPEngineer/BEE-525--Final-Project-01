@@ -1,6 +1,10 @@
 #! /usr/bin/bash
 
+#export PYTHONPATH=/usr/lib/python3/dist-packages
+sudp apt install python3-picamzero
+
 python3 -m venv env
+
 source env/bin/activate
 pip3 install tensorflow
 pip3 install opencv-python
