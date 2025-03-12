@@ -7,6 +7,7 @@
 ## Please use the following circuit diagram in page 5 to make the 	##
 ## connections. Double check the connections before you turn on Pi  ##
 ######################################################################
+import pypic as cam
 
 import tensorflow as tf 			# import the tensorflow library
 from CNN_model.model import create_model 	
@@ -16,6 +17,7 @@ import os
 import time
 import cv2
 import numpy as np
+
 
 # Path to load the weights of the model
 home_dir = os.environ['PWD']
@@ -61,6 +63,8 @@ path_to_image = r"testImages/Crop_1.png"
 #path_to_image = r"testImages/Crop_8.png"
 #path_to_image = r"testImages/Crop_9.png"
 startCapture = time.time()
+
+cam = cam.pypic()
 
 # Loading the grayscale image from a path to an array ?image?
 image = cv2.imread(path_to_image, cv2.IMREAD_GRAYSCALE)
