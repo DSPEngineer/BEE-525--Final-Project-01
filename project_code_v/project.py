@@ -58,16 +58,18 @@ print (predictions[1])
 print ( f"Predict: [{np.argmax(predictions[1])}]" )
 
 path_to_image = r"testImages/Crop_1.png"
-#path_to_image = r"testImages/Crop_2.png"
-#path_to_image = r"testImages/Crop_5.png"
+#path_to_image = r"testImages/Crop_2.png"#path_to_image = r"testImages/Crop_5.png"
 #path_to_image = r"testImages/Crop_8.png"
 #path_to_image = r"testImages/Crop_9.png"
 startCapture = time.time()
 
-cam = cam.pypic()
+capturedImage = 'pic-01.jpg'
+cam = cam.pypic(  file=capturedImage )
+cam.capture()
 
 # Loading the grayscale image from a path to an array ?image?
-image = cv2.imread(path_to_image, cv2.IMREAD_GRAYSCALE)
+#image = cv2.imread(path_to_image, cv2.IMREAD_GRAYSCALE)
+image = cv2.imread(  cam.getImgFullName(), cv2.IMREAD_GRAYSCALE )
 # To print the shape of the image using shape() method
 print( f"The shape of image array is {image.shape}")
 # The image shape is : (1944, 2592)
@@ -107,13 +109,19 @@ predictLatency = endPredict - startPredict
 
 print (predictions)
 print ( f"Predict: [{np.argmax(predictions)}]" )
+
+del cam
+
 ## Compute image capture time:
 width=7
 precision=6
-print ("------------------------------------------------------------------------------" )
+print( "--------------------------------------------------------------------------------" )
+print( predictions )
+print( "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --" )
+print( f"              Predict: [{np.argmax(predictions)}]" )
 print( f"   Image capture time: {1000*captureLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
 print( f"Image prediction time: {1000*predictLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
-print(  "                      -----------------------" )
+print( "                       -----------------------" )
 print( f"           Total time: {1000*(captureLatency+predictLatency):>{width}.{precision}} [ms]" ) # prints elapsed time
 
 
