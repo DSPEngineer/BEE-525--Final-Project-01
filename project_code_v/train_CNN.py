@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 ######################################################################
 ## Please use the following code to download the MNIST dataset using## 
 ## keras library. 								 					##

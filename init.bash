@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-#export PYTHONPATH=/usr/lib/python3/dist-packages
+#export PYTHONPATH=/usr/lib/python3/dist-packages/:~/.local/lib/python3.11/site-packages/
 sudp apt install python3-picamzero
 
 python3 -m venv env

@@ -1,3 +1,5 @@
+#! /usr/bin/python
+
 ######################################################################
 ## Please use the following code to test the CNN code			    ##
 ## Created by Madhava Vemuri 										##
