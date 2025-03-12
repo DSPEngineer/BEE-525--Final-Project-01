@@ -2,22 +2,40 @@
 
 from picamzero import Camera
 from time import sleep
-
-import numpy as np
 import os
 
+class pycamzero_pic:
 
-home_dir = os.environ['PWD'] #set the location of your current directory
-cam = Camera()
-#cam.still_size = (2592, 1944)
-cam.preview_size = (1920, 1080)
-#cam.still_size = (1024, 768)
-#cam.still_size = (960, 540)
-#cam.still_size = (28, 28)
+    def __init__(self):
+        self.imgWidth  = 28
+        self.imgHeight = 28
+        self.imgColors = 'gray'
+        self.imgDir    = os.environ['PWD']
+        self.imgFile   = 'img_picamzero.png'
+        self.cam       = Camera()
 
+    def setDir(self, iDir=os.environ['PWD']):
+        self.imgDir    = iDir
 
-cam.start_preview()
-sleep(8)
-cam.take_photo( f"image_picamzero.jpg" )   #save the image to your desktop
-cam.stop_preview()
+    def setImgName(self, iName='img_picamzero.png'):
+        self.imgFile   = iName
 
+    def setDimension(self, iWidth=28, iHeight=28, iColor='gray'):
+        self.imgWidth  = iWidth
+        self.imgHeight = iHeight
+        self.imgColors = iColor
+
+    def capture(self):
+        self.cam.still_size   = ( self.imgWidth, self.imgHeight )
+        self.cam.preview_size = ( self.imgWidth, self.imgHeight )
+        self.cam.start_preview()
+        sleep(8)
+        self.cam.take_photo( f"{self.imgDir}/{self.imgFile}" )   #save the image
+        self.cam.stop_preview()
+
+if __name__ == '__main__':
+    tmp = pycamzero_pic()
+    tmp.setImgName('xxx')
+    tmp.setDir()
+    tmp.setDimension(1080, 740)
+    tmp.capture()
