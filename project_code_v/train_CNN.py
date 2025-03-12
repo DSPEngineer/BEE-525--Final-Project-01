@@ -13,10 +13,12 @@ from CNN_model.model import create_model
 									# from the CNN_model folder
 import os 
 
+nEpochs=5
+
 # Path to save the weights of the model
 home_dir = os.environ['PWD']
 path_to_dir = f'{home_dir}'
-file_name = 'EPOCH_20.weights.h5'
+file_name = 'EPOCH_{nEpochs:02}.weights.h5'
 
 latest_weight_path=f"{path_to_dir}/{file_name}" 
 								# is the location best weights are saved
