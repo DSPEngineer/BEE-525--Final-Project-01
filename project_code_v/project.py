@@ -52,11 +52,6 @@ model.load_weights(latest_weight_path)
 
 #########################################################################
 
-predictions = model.predict( x_test )
-print ( f"Label: [{y_test[1]}]" )
-print (predictions[1])
-print ( f"Predict: [{np.argmax(predictions[1])}]" )
-
 path_to_image = r"testImages/Crop_1.png"
 #path_to_image = r"testImages/Crop_2.png"#path_to_image = r"testImages/Crop_5.png"
 #path_to_image = r"testImages/Crop_8.png"
@@ -101,14 +96,12 @@ captureLatency = endCapture - startCapture
 print( f"Image capture time: {captureLatency}" ) # prints elapsed time
 
 
+### Captured Image Precition
 startPredict = time.time()
 # Generating the inference using the predict() method
 predictions = model.predict( [test_image_tensor] )
 endPredict = time.time()
 predictLatency = endPredict - startPredict
-
-print (predictions)
-print ( f"Predict: [{np.argmax(predictions)}]" )
 
 del cam
 
