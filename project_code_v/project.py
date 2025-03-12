@@ -7,7 +7,8 @@
 ## Please use the following circuit diagram in page 5 to make the 	##
 ## connections. Double check the connections before you turn on Pi  ##
 ######################################################################
-import pypic as cam
+
+import pypic as camera
 import sevenSegment as ssd
 from time import sleep
 
@@ -20,18 +21,22 @@ import time
 import cv2
 import numpy as np
 
+## INitialze the seven segment display (needed once at beginning)
 display = ssd.sevenSegment()
-display.setDisplay( 5, ssd.DP_OFF)
-display.showDisplay()
-sleep(1)
 
 # Path to load the weights of the model
-home_dir = os.environ['PWD']
+home_dir = os.environ['PWD']		## store weights with code to make things easy
 path_to_dir = f'{home_dir}'
-file_name = 'current.weights.h5'
+file_name = 'current.weights.h5'	## symLink to the desired seights file
 
-print("Welcome BEE 525 Project 1")
+print("                          BEE 525 Project, Winter 2025")
+print("                        University of Washington, Bothell")
+print("                            Jose Pagan & Vincent Dang" )
+print("                              Due by: 16 March 2025" )
+print( "--------------------------------------------------------------------------------" )
 
+## CNN Model initialization, read weitghts from file.
+##  This model was trained seperately and the weights were saved to a file.
 latest_weight_path=f"{path_to_dir}/{file_name}"			# the location where weights are saved
 print( f"Weights file: {latest_weight_path}" )
 
@@ -49,88 +54,111 @@ x_test  = x_test.reshape(-1,28,28,1)
 # Loading an instance of the model using create_model()
 model = create_model()
 
-# Loading the weights of the model 
+# Loading the weights from a pre-trained model 
 model.load_weights(latest_weight_path)
 
 # Evaluate the model 
-#loss, accuracy = model.evaluate(x_test,y_test)
-#print('Test accuracy:', accuracy)
+loss, accuracy = model.evaluate(x_test,y_test)
+print('Model accuracy:', accuracy)
 
 #########################################################################
 
-path_to_image = r"testImages/Crop_1.png"
-#path_to_image = r"testImages/Crop_2.png"#path_to_image = r"testImages/Crop_5.png"
-#path_to_image = r"testImages/Crop_8.png"
-#path_to_image = r"testImages/Crop_9.png"
-startCapture = time.time()
+## Loop and continue capturing images
+captureLoop = True
 
-capturedImage = 'pic-01.jpg'
-cam = cam.pypic(  file=capturedImage )
-cam.capture()
+while captureLoop==True:
+	## This section captures a live image, via the Pi-Camera
+	capturedImage = 'pic-01.jpg'				## Arbitraary file name
+	cam = camera.pypic(  file=capturedImage )		## pypic is a class for my images
 
-# Loading the grayscale image from a path to an array ?image?
-#image = cv2.imread(path_to_image, cv2.IMREAD_GRAYSCALE)
-image = cv2.imread(  cam.getImgFullName(), cv2.IMREAD_GRAYSCALE )
-# To print the shape of the image using shape() method
-print( f"The shape of image array is {image.shape}")
-# The image shape is : (1944, 2592)
+	## Start timing the capture after the image is aligned
+	startCapture = time.time()
+	cam.capture()
 
-# Trying the resize() method
-image_reshape = cv2.resize(image,(28,28))
-# printing the outcome of reshape() method
-print(f"The new image shape is : {image_reshape.shape}")
-# The image shape is : (28, 28)
+	# Loading the grayscale image from a path to an array ?image?
+	image = cv2.imread(  cam.getImgFullName(), cv2.IMREAD_GRAYSCALE )
+	# DEBUG: To print the shape of the image using shape() method
+	### print( f"The shape of image array is {image.shape}")
+	# The image shape should be (1944, 2592)
 
-# Trying the slice technique
-# image[start_row:end_row, start_col:end_col]
-## image_cropped = image[50:78, 50:78]
-# printing the outcome of reshape() method
-## print(f"The cropped image shape is : {image_cropped.shape}")
-# The cropped image shape is : (28, 28)
+	# Trying the resize() method
+	image_reshape = cv2.resize(image,(28,28))
+	# DEBUG: printing the outcome of reshape() method
+	## print(f"The new image shape is : {image_reshape.shape}")
+	# The image shape should be (28, 28)
 
+	# Trying the slice technique
+	# image[start_row:end_row, start_col:end_col]
+	## image_cropped = image[50:78, 50:78]
+	# printing the outcome of reshape() method
+	## print(f"The cropped image shape is : {image_cropped.shape}")
+	# The cropped image shape is : (28, 28)
 
-# creating the test_image for a compatible image float type normalized image
-# each pixel value is between (0,1)
-test_image = image_reshape.astype(float)/255.0
-# Expanding the dimensions using expand_dims() method in tf library
-test_image_tensor = tf.expand_dims(test_image,axis=0)
-print( f"Tensor shape is {test_image_tensor.shape}" )
+	# creating the test_image for a compatible image float type normalized image
+	# each pixel value is between (0,1)
+	test_image = image_reshape.astype(float)/255.0
+	# Expanding the dimensions using expand_dims() method in tf library
+	test_image_tensor = tf.expand_dims(test_image,axis=0)
+	## DEBUG: Lets see the tensor dimensions
+	## print( f"Tensor shape is {test_image_tensor.shape}" )
 
-## Compute image capture Latency (time):
-endCapture = time.time()
-captureLatency = endCapture - startCapture
-print( f"Image capture time: {captureLatency}" ) # prints elapsed time
+	print( "================================================================================" )
 
+	## Done with capture and image processing.
+	endCapture = time.time()
+	## Compute image capture Latency (time):
+	captureLatency = endCapture - startCapture
+	print( f"Image capture time: {captureLatency}" ) # prints elapsed time
 
-### Captured Image Precition
-startPredict = time.time()
-# Generating the inference using the predict() method
-predictions = model.predict( [test_image_tensor] )
-endPredict = time.time()
-predictLatency = endPredict - startPredict
+	### Captured Image Precition time measurement
+	startPredict = time.time()
 
-del cam
+	# Generating the inference using the predict() method
+	predictions = model.predict( [test_image_tensor] )
+	endPredict = time.time()
 
-predictedValue = np.argmax(predictions)
-display.setDisplay( predictedValue, ssd.DP_OFF)
-display.showDisplay()
+	# Prediction done!
+	predictLatency = endPredict - startPredict
 
-## Compute image capture time:
-width=7
-precision=6
-print( "--------------------------------------------------------------------------------" )
-print( predictions )
-print( "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --" )
-print( f"              Predict: [{predictedValue}]" )
-print( f"   Image capture time: {1000*captureLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
-print( f"Image prediction time: {1000*predictLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
-print( "                       -----------------------" )
-print( f"           Total time: {1000*(captureLatency+predictLatency):>{width}.{precision}} [ms]" ) # prints elapsed time
+	## need to free the pycam object after I am done with the image
+	## This also removes the image from disk.
+	del cam
 
+	## evaluate the preditcion data
+	predictedValue = np.argmax(predictions)
 
-sleep(3)
-display.setDisplay( -1, ssd.DP_OFF)
-display.showDisplay()
+	## Set the value on the display
+	display.setDisplay( predictedValue, ssd.DP_OFF)
+	display.showDisplay()
 
-# end = time.time()
-# print(end - start) # prints elapsed time
+	## Report image capture and prediction time:
+	width=7
+	precision=6
+	print( "--------------------------------------------------------------------------------" )
+	print( predictions )
+	print( "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --" )
+	print( f"              Predict: [{predictedValue}]" )
+	print( f"   Image capture time: {1000*captureLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
+	print( f"Image prediction time: {1000*predictLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
+	print( "                       -----------------------" )
+	print( f"           Total time: {1000*(captureLatency+predictLatency):>{width}.{precision}} [ms]" ) # prints elapsed time
+
+	## Wait for input:
+	action = ''
+	print( "Please select the next action:")
+	while action != 'c':
+		print( "   c - continue and predict another image ")
+		print( "   q - quit predictions ")
+		action = input( "   Enter c or q, then press enter: ")
+		if action == 'q' :
+			## Quit this program
+			captureLoop = False
+			break
+		elif action != 'c' :
+			print( f"*** INVALID INPUT: [{action}]")
+			print( "Please enter only one of the choices bleow:")
+
+	## clear the display after 2 seconds, after selection is made
+	sleep(2)
+	display.setDisplay( -1, ssd.DP_OFF)
+	display.showDisplay()
