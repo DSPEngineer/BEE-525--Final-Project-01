@@ -22,12 +22,12 @@ from picamzero import Camera # import the library to handle the camera
 import os 
 from time import sleep 		 # import the sleep function 
 
-# Path to the home directory
+# Path to the current directory
 home_dir = os.environ['PWD']
 
 # Path to desitation folder 
 path_to_dir = f'{home_dir}'
-file_name = 'pi_capture1.jpg'
+file_name = 'image_capture_image.jpg'
 
 # Create a object instance for the Camera() class 
 cam = Camera()
@@ -37,7 +37,7 @@ cam.start_preview()
 
 # Wait for 4 seconds before taking the picture. Use this time to adjust 
 # the view in the preview
-sleep(4)
+sleep(8)
 
 # Use the take_photo() to Capture the photo and save it in the 
 # path_to_dir location with file_name

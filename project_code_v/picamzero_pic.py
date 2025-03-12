@@ -7,7 +7,7 @@ import numpy as np
 import os
 
 
-home_dir = os.environ['HOME'] #set the location of your home directory
+home_dir = os.environ['PWD'] #set the location of your current directory
 cam = Camera()
 #cam.still_size = (2592, 1944)
 cam.preview_size = (1920, 1080)
@@ -18,6 +18,6 @@ cam.preview_size = (1920, 1080)
 
 cam.start_preview()
 sleep(8)
-cam.take_photo( f"new_image.jpg" )   #save the image to your desktop
+cam.take_photo( f"image_picamzero.jpg" )   #save the image to your desktop
 cam.stop_preview()
 
