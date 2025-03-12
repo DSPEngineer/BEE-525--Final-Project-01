@@ -71,9 +71,10 @@ while captureLoop==True:
 	capturedImage = 'pic-01.jpg'				## Arbitraary file name
 	cam = camera.pypic(  file=capturedImage )		## pypic is a class for my images
 
+	cam.capture()
+
 	## Start timing the capture after the image is aligned
 	startCapture = time.time()
-	cam.capture()
 
 	# Loading the grayscale image from a path to an array ?image?
 	image = cv2.imread(  cam.getImgFullName(), cv2.IMREAD_GRAYSCALE )
@@ -102,50 +103,60 @@ while captureLoop==True:
 	## DEBUG: Lets see the tensor dimensions
 	## print( f"Tensor shape is {test_image_tensor.shape}" )
 
-	print( "================================================================================" )
-
 	## Done with capture and image processing.
 	endCapture = time.time()
+
+	print( "================================================================================" )
+
 	## Compute image capture Latency (time):
 	captureLatency = endCapture - startCapture
 	print( f"Image capture time: {captureLatency}" ) # prints elapsed time
 
+	print( "--------------------------------------------------------------------------------" )
 	### Captured Image Precition time measurement
 	startPredict = time.time()
 
 	# Generating the inference using the predict() method
 	predictions = model.predict( [test_image_tensor] )
-	endPredict = time.time()
 
 	# Prediction done!
+	endPredict = time.time()
 	predictLatency = endPredict - startPredict
+
+	## evaluate the preditcion data
+	predictedValue = np.argmax(predictions)
+
+	## Set the value on the 7-segment display
+	display.setDisplay( predictedValue, ssd.DP_OFF)
+	display.showDisplay()
+
+	# Time taken to predict and display on 7 segment:
+	endPredict = time.time()
+
+	# Prediction and display done!
+	predictDisplayLatency = endPredict - startPredict
 
 	## need to free the pycam object after I am done with the image
 	## This also removes the image from disk.
 	del cam
 
-	## evaluate the preditcion data
-	predictedValue = np.argmax(predictions)
-
-	## Set the value on the display
-	display.setDisplay( predictedValue, ssd.DP_OFF)
-	display.showDisplay()
-
 	## Report image capture and prediction time:
 	width=7
 	precision=6
-	print( "--------------------------------------------------------------------------------" )
+	print( "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --" )
 	print( predictions )
 	print( "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --" )
-	print( f"              Predict: [{predictedValue}]" )
-	print( f"   Image capture time: {1000*captureLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
-	print( f"Image prediction time: {1000*predictLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
-	print( "                       -----------------------" )
-	print( f"           Total time: {1000*(captureLatency+predictLatency):>{width}.{precision}} [ms]" ) # prints elapsed time
+	print( f"               Prediction: [{predictedValue}]" )
+	print( f"       Image capture time: {1000*captureLatency:>{width}.{precision}f} [ms]" ) 		# prints elapsed time
+	print( f"    Image prediction time: {1000*predictLatency:>{width}.{precision}f} [ms]" ) 		# prints elapsed time
+	print( f" Predict & 7-Segment time: {1000*predictDisplayLatency:>{width}.{precision}f} [ms]" ) 	# prints elapsed time
+#	print( "                       -----------------------" )
+#	print( f"           Total time: {1000*(captureLatency+predictLatency):>{width}.{precision}} [ms]" ) # prints elapsed time
+	print( f"     Total execution time: {1000*(captureLatency+predictDisplayLatency):>{width}.{precision}} [ms]" ) # prints elapsed time
 
 	## Wait for input:
 	action = ''
-	print( "Please select the next action:")
+	print( "\n\nPlease select the next action:")
 	while action != 'c':
 		print( "   c - continue and predict another image ")
 		print( "   q - quit predictions ")
@@ -155,7 +166,7 @@ while captureLoop==True:
 			captureLoop = False
 			break
 		elif action != 'c' :
-			print( f"*** INVALID INPUT: [{action}]")
+			print( f"\n\n*** INVALID INPUT: [{action}]")
 			print( "Please enter only one of the choices bleow:")
 
 	## clear the display after 2 seconds, after selection is made
