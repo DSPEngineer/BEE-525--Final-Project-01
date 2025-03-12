@@ -8,6 +8,8 @@
 ## connections. Double check the connections before you turn on Pi  ##
 ######################################################################
 import pypic as cam
+import sevenSegment as ssd
+from time import sleep
 
 import tensorflow as tf 			# import the tensorflow library
 from CNN_model.model import create_model 	
@@ -18,6 +20,10 @@ import time
 import cv2
 import numpy as np
 
+display = ssd.sevenSegment()
+display.setDisplay( 5, ssd.DP_OFF)
+display.showDisplay()
+sleep(1)
 
 # Path to load the weights of the model
 home_dir = os.environ['PWD']
@@ -105,18 +111,26 @@ predictLatency = endPredict - startPredict
 
 del cam
 
+predictedValue = np.argmax(predictions)
+display.setDisplay( predictedValue, ssd.DP_OFF)
+display.showDisplay()
+
 ## Compute image capture time:
 width=7
 precision=6
 print( "--------------------------------------------------------------------------------" )
 print( predictions )
 print( "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --" )
-print( f"              Predict: [{np.argmax(predictions)}]" )
+print( f"              Predict: [{predictedValue}]" )
 print( f"   Image capture time: {1000*captureLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
 print( f"Image prediction time: {1000*predictLatency:>{width}.{precision}f} [ms]" ) # prints elapsed time
 print( "                       -----------------------" )
 print( f"           Total time: {1000*(captureLatency+predictLatency):>{width}.{precision}} [ms]" ) # prints elapsed time
 
+
+sleep(3)
+display.setDisplay( -1, ssd.DP_OFF)
+display.showDisplay()
 
 # end = time.time()
 # print(end - start) # prints elapsed time
