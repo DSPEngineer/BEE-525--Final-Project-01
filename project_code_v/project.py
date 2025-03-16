@@ -1,12 +1,30 @@
 #! /usr/bin/python
 
-######################################################################
-## Please use the following code to test the CNN code			    ##
-## Created by Madhava Vemuri 										##
-## Date 3/3/25														##
-## Please use the following circuit diagram in page 5 to make the 	##
-## connections. Double check the connections before you turn on Pi  ##
-######################################################################
+#########################################################################
+## Project for BEE-525 Embedded Systems, UWB                           ##
+##                                                                     ##
+##  Python file to capture an image, using the Raspberry Pi 4 camera   ##
+##  and convert that image to tensor format. The Tenor is provided     ##
+##  to a Tensorflow CNN (convolutional neural network) model. The      ##
+##  CNN is trained on the MNIST dataset for number prediction.         ##
+##                                                                     ##
+##  The model and training data were created by Madhava Vemuri, the    ##
+##  course instructor. These items were used unmodified in creating    ##
+##  this project.                                                      ##
+##                                                                     ##
+##  Training data used includes instructor provided data and           ##
+##  generated data using various epoch values. See file training.py    ##
+##                                                                     ##
+## Created by Jose Pagan & Vincent Dang				       ##
+## Date 03/05/2025						       ##
+##    Based on the file(s) provided by Madhava Vemuri                  ##
+##    Date 3/3/25						       ##
+##                                                                     ##
+#########################################################################
+## Hithub:                                                             ##
+##    https://github.com/DSPEngineer/BEE-525--Final-Project-01         ##
+##                                                                     ##
+#########################################################################
 
 import pypic as camera
 import sevenSegment as ssd

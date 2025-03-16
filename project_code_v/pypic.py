@@ -1,4 +1,12 @@
 #! /usr/bin/python3
+######################################################################
+## Wrapper class for pycamzero.                                     ##
+##                                                                  ##
+######################################################################
+## Hithub:                                                          ##
+##    https://github.com/DSPEngineer/BEE-525--Final-Project-01      ##
+##                                                                  ##
+######################################################################
 
 from picamzero import Camera
 from time import sleep

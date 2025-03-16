@@ -4,11 +4,13 @@
 ## This file defines a class to write the 7 segment LED display on  ##
 ## the Raspberry Pi 4B, using GPIO pins,as listed below.            ##
 ##                                                                  ##
-##  
-##  Created by Madhava Vemuri 										##
-## Date 2/25/25														##
-## Please use the following circuit diagram in page 24 to make the 	##
-## connections. Double check the connections before you turn the Pi ##
+##  Created by Jose Pagan                                           ##
+##    based on file from Madhava Vemuri				    ##
+## Date 03/09/2025						    ##
+######################################################################
+## Hithub:                                                          ##
+##    https://github.com/DSPEngineer/BEE-525--Final-Project-01      ##
+##                                                                  ##
 ######################################################################
 
 import RPi.GPIO as GPIO 	#Import the Raspberry Pi GPIO Library
